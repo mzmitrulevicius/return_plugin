@@ -1,0 +1,104 @@
+/* Custom styles for the guest return request form */
+#guest-return-request-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+#guest-return-request-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#guest-return-request-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#guest-return-request-form input[type="text"],
+#guest-return-request-form input[type="email"],
+#guest-return-request-form button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#guest-return-request-form button[type="submit"] {
+    background-color: #ff7f00;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+#guest-return-request-form button[type="submit"]:hover {
+    background-color: #e67500;
+}
+
+/* Custom styles for the return request form */
+#wc-return-request-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+#wc-return-request-form h2,
+#wc-return-request-form h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#wc-return-request-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#wc-return-request-form textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#wc-return-request-form input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#wc-return-request-form button[type="submit"] {
+    background-color: #ff7f00;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+#wc-return-request-form button[type="submit"]:hover {
+    background-color: #e67500;
+}
+
+#return-request-guest-header
+{
+    text-align: center;
+}
+#return-request-guest-header{
+    text-align: center;
+    margin-bottom: 20px;
+}

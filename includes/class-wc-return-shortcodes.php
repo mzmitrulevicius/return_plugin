@@ -43,8 +43,7 @@ class WC_Return_Shortcodes
 
         return ob_get_clean();
     }
+
 }
 
-if (!isset($GLOBALS['wc_return_shortcodes'])) {
-    $GLOBALS['wc_return_shortcodes'] = new WC_Return_Shortcodes();
-}
+new WC_Return_Shortcodes();

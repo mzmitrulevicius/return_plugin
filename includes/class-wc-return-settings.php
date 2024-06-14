@@ -19,7 +19,7 @@ class WC_Return_Settings
 
         add_settings_section(
             'wc_return_requests_settings_section',
-            __('Thank You Page Settings', 'woocommerce'),
+            __('Return Requests Settings', 'woocommerce'),
             null,
             'wc-return-requests-settings'
         );
@@ -51,27 +51,25 @@ class WC_Return_Settings
 
     public function thank_you_image_callback()
     {
-        $image = get_option('thank_you_image');
-        echo '<input type="text" id="thank_you_image" name="thank_you_image" value="' . esc_attr($image) . '" />';
-        echo '<button type="button" class="button upload_image_button">' . __('Upload Image', 'woocommerce') . '</button>';
-        if ($image) {
-            echo '<br><img src="' . esc_url($image) . '" style="max-width: 300px;"/>';
+        $thank_you_image = get_option('thank_you_image');
+        echo '<input type="text" id="thank_you_image" name="thank_you_image" value="' . esc_attr($thank_you_image) . '" />';
+        echo '<button type="button" class="button" id="upload_image_button">' . __('Upload Image', 'woocommerce') . '</button>';
+        if ($thank_you_image) {
+            echo '<img src="' . esc_url($thank_you_image) . '" style="max-width: 100%; height: auto;" />';
         }
     }
 
     public function thank_you_header_callback()
     {
-        $header = get_option('thank_you_header');
-        echo '<input type="text" id="thank_you_header" name="thank_you_header" value="' . esc_attr($header) . '" />';
+        $thank_you_header = get_option('thank_you_header');
+        echo '<input type="text" id="thank_you_header" name="thank_you_header" value="' . esc_attr($thank_you_header) . '" />';
     }
 
     public function thank_you_message_callback()
     {
-        $message = get_option('thank_you_message');
-        echo '<textarea id="thank_you_message" name="thank_you_message" rows="5" cols="50">' . esc_textarea($message) . '</textarea>';
+        $thank_you_message = get_option('thank_you_message');
+        echo '<textarea id="thank_you_message" name="thank_you_message" rows="5" cols="50">' . esc_textarea($thank_you_message) . '</textarea>';
     }
 }
 
-if (!isset($GLOBALS['wc_return_settings'])) {
-    $GLOBALS['wc_return_settings'] = new WC_Return_Settings();
-}
+new WC_Return_Settings();

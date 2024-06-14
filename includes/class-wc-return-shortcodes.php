@@ -43,7 +43,6 @@ class WC_Return_Shortcodes
 
         return ob_get_clean();
     }
-
 }
 
 new WC_Return_Shortcodes();

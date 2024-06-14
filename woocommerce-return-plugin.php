@@ -20,7 +20,6 @@ include_once plugin_dir_path(__FILE__) . 'includes/class-wc-return-user.php';
 // Initialize the classes only once
 new WC_Return_Admin();
 new WC_Return_Handler();
-new WC_Return_Settings();
 new WC_Return_Shortcodes();
 new WC_Return_User();
 

@@ -4,30 +4,37 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-class WC_Return_Admin
-{
-    public function __construct()
-    {
+class WC_Return_Admin {
+    public function __construct() {
         add_action('init', [$this, 'register_return_request_post_type']);
         add_action('admin_menu', [$this, 'add_menu_pages']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
         add_action('add_meta_boxes', [$this, 'add_meta_boxes']);
         add_action('save_post', [$this, 'save_return_request_status'], 10, 2);
         add_filter('wp_insert_post_data', [$this, 'remove_editor_for_return_requests'], 10, 2);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
         add_action('admin_init', [$this, 'register_settings']);
     }
 
-    public function remove_editor_for_return_requests($data, $postarr)
-    {
+    public function register_settings() {
+        register_setting('wc_return_requests_settings_group', 'thank_you_image');
+        register_setting('wc_return_requests_settings_group', 'thank_you_header');
+        register_setting('wc_return_requests_settings_group', 'thank_you_message');
+        register_setting('wc_return_requests_settings_group', 'thank_you_page_width');
+        register_setting('wc_return_requests_settings_group', 'thank_you_page_height');
+        register_setting('wc_return_requests_settings_group', 'thank_you_header_font_size');
+        register_setting('wc_return_requests_settings_group', 'thank_you_paragraph_font_size');
+        register_setting('wc_return_requests_settings_group', 'thank_you_font_family');
+        register_setting('wc_return_requests_settings_group', 'thank_you_slug');
+    }
+
+    public function remove_editor_for_return_requests($data, $postarr) {
         if ($data['post_type'] == 'wc_return_request') {
             $data['post_content'] = ''; // Empty the content to remove the editor
         }
         return $data;
     }
 
-    public function add_meta_boxes()
-    {
+    public function add_meta_boxes() {
         add_meta_box(
             'wc_return_request_details',
             __('Return Request Details', 'woocommerce'),
@@ -38,8 +45,7 @@ class WC_Return_Admin
         );
     }
 
-    public function register_return_request_post_type()
-    {
+    public function register_return_request_post_type() {
         register_post_type('wc_return_request', [
             'labels' => [
                 'name' => __('Return Requests', 'woocommerce-return-plugin'),
@@ -53,8 +59,7 @@ class WC_Return_Admin
         ]);
     }
 
-    public function return_request_details_meta_box($post)
-    {
+    public function return_request_details_meta_box($post) {
         $order_id = get_post_meta($post->ID, '_order_id', true);
         $order = wc_get_order($order_id);
         $box_opened = get_post_meta($post->ID, '_box_opened', true);
@@ -82,8 +87,7 @@ class WC_Return_Admin
         <?php
     }
 
-    public function add_menu_pages()
-    {
+    public function add_menu_pages() {
         // Ensure no duplicate menu by checking for existing menu pages
         remove_menu_page('wc-return-requests');
 
@@ -130,8 +134,7 @@ class WC_Return_Admin
         );
     }
 
-    public function return_requests_dashboard()
-    {
+    public function return_requests_dashboard() {
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Return Requests Dashboard', 'woocommerce-return-plugin'); ?></h1>
@@ -142,15 +145,24 @@ class WC_Return_Admin
         <?php
     }
 
-    public function settings_page()
-    {
+    public function settings_page() {
+        $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'general';
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Return Requests Settings', 'woocommerce-return-plugin'); ?></h1>
+            <h2 class="nav-tab-wrapper">
+                <a href="?page=wc-return-requests-settings&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('General Settings', 'woocommerce-return-plugin'); ?></a>
+                <a href="?page=wc-return-requests-settings&tab=thank_you" class="nav-tab <?php echo $active_tab == 'thank_you' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Thank You Page Settings', 'woocommerce-return-plugin'); ?></a>
+            </h2>
             <form method="post" action="options.php">
                 <?php
-                settings_fields('wc_return_requests_settings_group');
-                do_settings_sections('wc-return-requests-settings');
+                if ($active_tab == 'general') {
+                    settings_fields('wc_return_requests_settings_group');
+                    do_settings_sections('wc-return-requests-settings');
+                } else {
+                    settings_fields('wc_return_requests_settings_group');
+                    do_settings_sections('wc-return-requests-settings-thank-you');
+                }
                 submit_button();
                 ?>
             </form>
@@ -158,82 +170,33 @@ class WC_Return_Admin
         <?php
     }
 
-    public function enqueue_admin_scripts($hook)
-    {
-        if ('post.php' != $hook) {
-            return;
-        }
-        wp_enqueue_script('wc_return_request_admin_js', plugin_dir_url(__FILE__) . 'js/wc-return-request-admin.js', array('jquery'), '1.0', true);
-    }
-
-    public function save_return_request_status($post_id, $post)
-{
-    if ($post->post_type == 'wc_return_request') {
-        if (isset($_POST['return_request_status'])) {
-            update_post_meta($post_id, '_return_request_status', sanitize_text_field($_POST['return_request_status']));
-        }
-        if (isset($_POST['return_reason'])) {
-            update_post_meta($post_id, '_return_reason', sanitize_textarea_field($_POST['return_reason']));
+    public function save_return_request_status($post_id, $post) {
+        if ($post->post_type == 'wc_return_request') {
+            if (isset($_POST['return_request_status'])) {
+                update_post_meta($post_id, '_return_request_status', sanitize_text_field($_POST['return_request_status']));
+            }
+            if (isset($_POST['return_reason'])) {
+                update_post_meta($post_id, '_return_reason', sanitize_textarea_field($_POST['return_reason']));
+            }
         }
     }
-}
 
-public function enqueue_scripts() {
-    wp_enqueue_script(
-        'wc-return-request-admin',
-        plugin_dir_url(__FILE__) . 'js/wc-return-request-admin.js',
-        ['jquery'],
-        '1.0',
-        true
-    );
-}
+    public function enqueue_scripts() {
+        wp_enqueue_script(
+            'wc-return-request-admin',
+            plugin_dir_url(__FILE__) . 'js/wc-return-request-admin.js',
+            ['jquery'],
+            '1.0',
+            true
+        );
+    }
 
-// In class-wc-return-admin.php (if not already present)
-public function register_settings() {
-    register_setting('wc_return_requests_settings_group', 'thank_you_image');
-    register_setting('wc_return_requests_settings_group', 'thank_you_header');
-    register_setting('wc_return_requests_settings_group', 'thank_you_message');
-
-    add_settings_section('wc_return_requests_settings_section', __('Thank You Page Settings', 'woocommerce'), null, 'wc-return-requests-settings');
-
-    add_settings_field(
-        'thank_you_image',
-        __('Thank You Image URL', 'woocommerce'),
-        [$this, 'image_url_callback'],
-        'wc-return-requests-settings',
-        'wc_return_requests_settings_section'
-    );
-
-    add_settings_field(
-        'thank_you_header',
-        __('Thank You Header Text', 'woocommerce'),
-        [$this, 'header_text_callback'],
-        'wc-return-requests-settings',
-        'wc_return_requests_settings_section'
-    );
-
-    add_settings_field(
-        'thank_you_message',
-        __('Thank You Message Text', 'woocommerce'),
-        [$this, 'message_text_callback'],
-        'wc-return-requests-settings',
-        'wc_return_requests_settings_section'
-    );
-}
-
-public function image_url_callback() {
-    $thank_you_image = get_option('thank_you_image');
-    echo '<input type="text" id="thank_you_image" name="thank_you_image" value="' . esc_attr($thank_you_image) . '" />';
-}
-
-public function header_text_callback() {
-    $thank_you_header = get_option('thank_you_header');
-    echo '<input type="text" id="thank_you_header" name="thank_you_header" value="' . esc_attr($thank_you_header) . '" />';
-}
-
-public function message_text_callback() {
-    $thank_you_message = get_option('thank_you_message');
-    echo '<textarea id="thank_you_message" name="thank_you_message">' . esc_textarea($thank_you_message) . '</textarea>';
+    public function enqueue_admin_scripts($hook) {
+    if ($hook != 'toplevel_page_wc-return-requests' && $hook != 'woocommerce_page_wc-return-requests-settings') {
+        return;
+    }
+    wp_enqueue_media();
+    wp_enqueue_script('wc_return_request_admin_js', plugin_dir_url(__FILE__) . 'js/wc-return-request-admin.js', array('jquery'), '1.0', true);
 }
 
 }

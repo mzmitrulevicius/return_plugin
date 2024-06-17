@@ -2,8 +2,8 @@
 /*
 Plugin Name: WooCommerce Return Requests
 Description: Handle return requests for WooCommerce orders.
-Version: 1.0
-Author: Your Name
+Version: 2.0
+Author: Nesas
 */
 
 if (!defined('ABSPATH')) {
@@ -17,9 +17,10 @@ include_once plugin_dir_path(__FILE__) . 'includes/class-wc-return-settings.php'
 include_once plugin_dir_path(__FILE__) . 'includes/class-wc-return-shortcodes.php';
 include_once plugin_dir_path(__FILE__) . 'includes/class-wc-return-user.php';
 
-// Initialize the classes only once
-new WC_Return_Admin();
+// Initialize the classes
+//new WC_Return_Admin();
 new WC_Return_Handler();
+new WC_Return_Settings();
 new WC_Return_Shortcodes();
 new WC_Return_User();
 
@@ -90,16 +91,18 @@ function wc_add_return_request_email_settings($settings) {
 }
 add_filter('woocommerce_get_settings_emails', 'wc_add_return_request_email_settings');
 
-// Enqueue styles
 function enqueue_custom_return_request_styles() {
     wp_enqueue_style('custom-return-request-styles', plugin_dir_url(__FILE__) . 'assets/css/custom-return-request.css');
 }
 add_action('wp_enqueue_scripts', 'enqueue_custom_return_request_styles');
 
 function enqueue_thank_you_styles() {
-    if (is_page('thank-you')) { // Adjust the condition to target the correct page
+    $thank_you_slug = get_option('thank_you_slug', 'thank-you'); // Default to 'thank-you' if not set
+    if (is_page($thank_you_slug)) {
         wp_enqueue_style('thank-you-page', plugin_dir_url(__FILE__) . 'assets/css/thank-you-page.css');
     }
 }
 add_action('wp_enqueue_scripts', 'enqueue_thank_you_styles');
+
+
 

@@ -12,6 +12,15 @@ class WC_Return_Handler {
         add_action('init', [$this, 'handle_return_request_submission']);
         add_action('save_post_wc_return_request', [$this, 'handle_status_change'], 10, 3);
     }
+    public function enqueue_admin_scripts($hook) {
+    if ($hook != 'toplevel_page_wc-return-requests' && $hook != 'woocommerce_page_wc-return-requests-settings') {
+        return;
+    }
+    wp_enqueue_media();
+    wp_enqueue_script('wc_return_request_admin_js', plugin_dir_url(__FILE__) . 'includes/js/wc-return-request-admin.js', array('jquery'), '1.0', true);
+    wp_enqueue_style('wc_return_request_admin_css', plugin_dir_url(__FILE__) . 'includes/css/wc-return-request-admin.css', array(), '1.0');
+}
+
 
     public function handle_return_request_submission() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['wc_return_request'])) {
@@ -174,14 +183,7 @@ class WC_Return_Handler {
                 $email_class->trigger($order_id, $order);
             }
         }
-    }public function enqueue_admin_scripts($hook) {
-    if ($hook != 'toplevel_page_wc-return-requests' && $hook != 'woocommerce_page_wc-return-requests-settings') {
-        return;
     }
-    wp_enqueue_media();
-    wp_enqueue_script('wc_return_request_admin_js', plugin_dir_url(__FILE__) . 'js/wc-return-request-admin.js', array('jquery'), '1.0', true);
-    wp_enqueue_style('wc_return_request_admin_css', plugin_dir_url(__FILE__) . 'css/wc-return-request-admin.css', array(), '1.0');
-}
 
 }
 

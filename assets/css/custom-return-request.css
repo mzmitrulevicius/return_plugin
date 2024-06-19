@@ -1,51 +1,6 @@
-/* Custom styles for the guest return request form */
-#guest-return-request-form {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-}
-
-#guest-return-request-form h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-#guest-return-request-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-#guest-return-request-form input[type="text"],
-#guest-return-request-form input[type="email"],
-#guest-return-request-form button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#guest-return-request-form button[type="submit"] {
-    background-color: #ff7f00;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-#guest-return-request-form button[type="submit"]:hover {
-    background-color: #e67500;
-}
-
 /* Custom styles for the return request form */
 #wc-return-request-form {
-    max-width: 800px;
+    max-width: 100%; /* Make the form narrower */
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -88,17 +43,142 @@
     cursor: pointer;
     padding: 10px 20px;
     border-radius: 4px;
+    font-size: 16px;
+    width: 50%; /* Make the button half-width */
+    text-align: center; /* Center align the text */
+    display: block;
+    margin: 20px auto 0 auto; /* Center the button */
 }
 
 #wc-return-request-form button[type="submit"]:hover {
     background-color: #e67500;
 }
 
-#return-request-guest-header
-{
+.product-image {
+    width: 100px; /* Smaller image */
+    height: auto;
+    float: left;
+    margin-right: 20px;
+}
+.product-info {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(45% - 95px); /* Adjust width to fit alongside the image */
+    margin-right: 20px;
+}
+
+.product-details {
+    overflow: hidden;
+}
+
+.return-qty,
+.return-checkboxes,
+.return-reason {
+    margin-top: 10px;
+}
+
+/* Center align the header */
+#wc-return-request-form h2 {
     text-align: center;
 }
-#return-request-guest-header{
+
+/* Reduce image size */
+.product-name img {
+    width: 50%;
+    height: auto;
+    margin-right: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* Adjust product name and quantity to be to the right of the image */
+.product-details {
+    display: inline-block;
+    vertical-align: top;
+    width: 45%;
+}
+
+/* Style the checkboxes and reason box */
+.product-checks {
+    display: inline-block;
+    width: 45%;
+    vertical-align: top;
+    margin-top: 10px;
+}
+
+.product-checks label,
+.product-checks textarea {
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Style for the overall table and cells */
+.shop_table.order_details tbody tr td {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.shop_table.order_details tfoot tr th,
+.shop_table.order_details tfoot tr td {
+    text-align: left;
+    padding: 10px 20px;
+}
+
+/* Style the file input button */
+#wc-return-request-form input[type="file"] {
+    display: inline-block;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
     text-align: center;
-    margin-bottom: 20px;
+    font-size: 16px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+#wc-return-request-form input[type="file"]::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+#wc-return-request-form input[type="file"]::before {
+    content: 'Choose File';
+    display: inline-block;
+    background: #ff7f00;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+#wc-return-request-form input[type="file"]:hover::before {
+    background-color: #e67500;
+}
+
+#return-order-info{
+    text-align: center;
+}
+
+#wc-return-request-form button[type="submit"] {
+    background-color: #ff7f00;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 50%; /* Adjust the width as needed */
+    text-align: center;
+    display: block;
+    margin: 20px auto 0 auto;
+}
+
+#wc-return-request-form button[type="submit"]:hover {
+    background-color: #e67500;
 }

@@ -1,26 +1,23 @@
-jQuery(document).ready(function ($) {
-    $('#upload_image_button').click(function (e) {
-        e.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById("image-modal");
+    const modalImg = document.getElementById("modal-image");
+    const captionText = document.getElementById("caption");
+    const images = document.querySelectorAll('.return-image-thumbnail');
+    const span = document.getElementsByClassName("close")[0];
 
-        var imageFrame;
-        if (imageFrame) {
-            imageFrame.open();
-            return;
-        }
-
-        imageFrame = wp.media({
-            title: 'Select or Upload Media',
-            button: {
-                text: 'Use this media'
-            },
-            multiple: false
+    images.forEach(image => {
+        image.addEventListener('click', function() {
+            modal.style.display = "block";
+            modalImg.src = this.src;
+            captionText.innerHTML = this.alt;
         });
-
-        imageFrame.on('select', function () {
-            var attachment = imageFrame.state().get('selection').first().toJSON();
-            $('#thank_you_image').val(attachment.url);
-        });
-
-        imageFrame.open();
     });
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    modal.onclick = function() {
+        modal.style.display = "none";
+    }
 });

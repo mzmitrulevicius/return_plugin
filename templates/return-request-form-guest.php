@@ -35,59 +35,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['order_id'], $_POST['gu
             <p><?php esc_html_e('You can only return orders within 30 days of purchase.', 'woocommerce'); ?></p>
         <?php } else { ?>
             <div class="woocommerce-account">
-                <h2><?php printf(__('Return Request for Order #%s', 'woocommerce'), esc_html($order->get_order_number())); ?></h2>
-                <form id="wc-return-request-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                <h2 class="text-center"><?php printf(__('Return Request for Order #%s', 'woocommerce'), esc_html($order->get_order_number())); ?></h2>
+                <form id="wc-return-request-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" enctype="multipart/form-data">
                     <?php wp_nonce_field('submit_return_request', 'return_request_nonce'); ?>
-                    <h3><?php esc_html_e('Order Information', 'woocommerce'); ?></h3>
+                    <h3 class="text-center"><?php esc_html_e('Order Information', 'woocommerce'); ?></h3>
+                    <div id="return-order-info">
                     <p><?php printf(__('Order Number: %s', 'woocommerce'), esc_html($order->get_order_number())); ?></p>
                     <p><?php printf(__('Order Date: %s', 'woocommerce'), esc_html($order->get_date_created()->date('F j, Y'))); ?></p>
                     <p><?php printf(__('Order Status: %s', 'woocommerce'), esc_html(wc_get_order_status_name($order->get_status()))); ?></p>
-
-                    <h3><?php esc_html_e('Order Details', 'woocommerce'); ?></h3>
+                    </div>
+                    <h3 class="text-center"><?php esc_html_e('Order Details', 'woocommerce'); ?></h3>
                     <table class="shop_table order_details">
-                        <thead>
-                            <tr>
-                                <th class="product-name"><?php esc_html_e('Product', 'woocommerce'); ?></th>
-                                <th class="product-total"><?php esc_html_e('Total', 'woocommerce'); ?></th>
-                            </tr>
-                        </thead>
                         <tbody>
-                            <?php
-                            foreach ($order->get_items() as $item_id => $item) {
-                                ?>
-                                <tr>
-                                    <td class="product-name"><?php echo esc_html($item->get_name()); ?> × <?php echo esc_html($item->get_quantity()); ?></td>
-                                    <td class="product-total"><?php echo wp_kses_post($order->get_formatted_line_subtotal($item)); ?></td>
-                                </tr>
-                                <?php
-                            }
+                            <?php foreach ($order->get_items() as $item_id => $item) :
+                                $product = $item->get_product();
+                                $product_name = $product->get_name();
+                                $product_image = wp_get_attachment_image_src(get_post_thumbnail_id($product->get_id()), 'single-post-thumbnail');
+                                $qty = $item->get_quantity();
                             ?>
+                                <tr>
+                                    <td class="product-image">
+                                        <img src="<?php echo $product_image[0]; ?>" alt="<?php echo esc_attr($product_name); ?>" style="width: 75px; height: auto;">
+                                    </td>
+                                    <td class="product-info">
+                                        <div>
+                                            <strong><?php echo esc_html($product_name); ?></strong>
+                                            <p><?php _e('Quantity to Return', 'woocommerce'); ?>: 
+                                                <select name="return_qty[<?php echo $item_id; ?>]">
+                                                    <?php for ($i = 0; $i <= $qty; $i++) : ?>
+                                                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                                    <?php endfor; ?>
+                                                </select>
+                                            </p>
+                                            <p>
+                                                <label>
+                                                    <input type="checkbox" name="box_opened[<?php echo $item_id; ?>]" value="yes">
+                                                    <?php _e('Box was opened', 'woocommerce'); ?>
+                                                </label>
+                                            </p>
+                                            <p>
+                                                <label>
+                                                    <input type="checkbox" name="bottle_broken[<?php echo $item_id; ?>]" value="yes">
+                                                    <?php _e('Bottle was broken', 'woocommerce'); ?>
+                                                </label>
+                                            </p>
+                                        
+                                        </div>
+                                    </td>
+                                    <td class="return-reason">
+                                        <label for="return_reason[<?php echo $item_id; ?>]"><?php _e('Reason for Return', 'woocommerce'); ?></label>
+                                        <textarea name="return_reason[<?php echo $item_id; ?>]" id="return_reason[<?php echo $item_id; ?>]" rows="2" cols="50"></textarea>
+                                        <p>
+                                                <label for="return_image[<?php echo $item_id; ?>]" class="button"><?php _e('Choose File', 'woocommerce'); ?></label>
+                                                <input type="file" name="return_image[<?php echo $item_id; ?>]" id="return_image[<?php echo $item_id; ?>]">
+                                            </p>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
-                        <tfoot>
-                            <?php
-                            foreach ($order->get_order_item_totals() as $key => $total) {
-                                ?>
-                                <tr>
-                                    <th scope="row"><?php echo esc_html($total['label']); ?></th>
-                                    <td><?php echo wp_kses_post($total['value']); ?></td>
-                                </tr>
-                                <?php
-                            }
-                            ?>
-                        </tfoot>
                     </table>
 
                     <input type="hidden" name="order_id" value="<?php echo esc_attr($order_id); ?>">
                     <input type="hidden" name="action" value="wc_return_request">
                     <input type="hidden" name="guest_email" value="<?php echo esc_attr($order_email); ?>">
-
-                    <label for="return_reason"><?php esc_html_e('Return Reason', 'woocommerce'); ?></label>
-                    <textarea name="return_reason" id="return_reason" required></textarea>
-
-                    <label for="box_opened">
-                        <input type="checkbox" name="box_opened" id="box_opened" value="yes">
-                        <?php esc_html_e('Box was opened', 'woocommerce'); ?>
-                    </label>
 
                     <button type="submit" name="wc_return_request"><?php esc_html_e('Submit', 'woocommerce'); ?></button>
                 </form>

@@ -16,3 +16,8 @@
 .thank-you-page p {
     font-size: 1.2em;
 }
+.thank-you-page {
+    max-width: 50%;
+    margin: 0 auto;
+    text-align: center;
+}

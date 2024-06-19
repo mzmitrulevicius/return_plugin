@@ -8,7 +8,7 @@ class WC_Return_Settings {
         add_action('admin_init', [$this, 'register_settings']);
     }
 
-    public function register_settings() {
+     public function register_settings() {
         register_setting('wc_return_requests_settings_group', 'thank_you_image');
         register_setting('wc_return_requests_settings_group', 'thank_you_header');
         register_setting('wc_return_requests_settings_group', 'thank_you_message');
@@ -17,9 +17,9 @@ class WC_Return_Settings {
         register_setting('wc_return_requests_settings_group', 'thank_you_header_font_size');
         register_setting('wc_return_requests_settings_group', 'thank_you_paragraph_font_size');
         register_setting('wc_return_requests_settings_group', 'thank_you_font_family');
-        register_setting('wc_return_requests_settings_group', 'thank_you_slug');
+        register_setting('wc_return_requests_settings_group', 'thank_you_slug', ['default' => 'return-form-submitted']);
+        register_setting('wc_return_requests_settings_group', 'thank_you_content_width');
 
-        add_settings_section('wc_return_requests_general_section', __('General Settings', 'woocommerce-return-plugin'), null, 'wc-return-requests-settings');
         add_settings_section('wc_return_requests_thank_you_section', __('Thank You Page Settings', 'woocommerce-return-plugin'), null, 'wc-return-requests-settings-thank-you');
 
         add_settings_field('thank_you_image', __('Thank You Page Image', 'woocommerce-return-plugin'), [$this, 'thank_you_image_callback'], 'wc-return-requests-settings-thank-you', 'wc_return_requests_thank_you_section');
@@ -31,6 +31,8 @@ class WC_Return_Settings {
         add_settings_field('thank_you_paragraph_font_size', __('Paragraph Font Size', 'woocommerce-return-plugin'), [$this, 'thank_you_paragraph_font_size_callback'], 'wc-return-requests-settings-thank-you', 'wc_return_requests_thank_you_section');
         add_settings_field('thank_you_font_family', __('Font Family', 'woocommerce-return-plugin'), [$this, 'thank_you_font_family_callback'], 'wc-return-requests-settings-thank-you', 'wc_return_requests_thank_you_section');
         add_settings_field('thank_you_slug', __('Thank You Page Slug', 'woocommerce-return-plugin'), [$this, 'thank_you_slug_callback'], 'wc-return-requests-settings-thank-you', 'wc_return_requests_thank_you_section');
+        add_settings_field('thank_you_content_width', __('Thank You Page Content Width', 'woocommerce-return-plugin'), [$this, 'thank_you_content_width_callback'], 'wc-return-requests-settings-thank-you', 'wc_return_requests_thank_you_section');
+
     }
 
     public function thank_you_image_callback() {
@@ -77,8 +79,13 @@ class WC_Return_Settings {
         echo '<input type="text" id="thank_you_font_family" name="thank_you_font_family" value="' . esc_attr($value) . '" />';
     }
 
-    public function thank_you_slug_callback() {
-        $value = get_option('thank_you_slug', '');
-        echo '<input type="text" id="thank_you_slug" name="thank_you_slug" value="' . esc_attr($value) . '" />';
+     public function thank_you_slug_callback() {
+        $thank_you_slug = get_option('thank_you_slug', 'return-form-submitted');
+        echo '<input type="text" id="thank_you_slug" name="thank_you_slug" value="' . esc_attr($thank_you_slug) . '" />';
     }
+    public function thank_you_content_width_callback() {
+    $thank_you_content_width = get_option('thank_you_content_width');
+    echo '<input type="text" id="thank_you_content_width" name="thank_you_content_width" value="' . esc_attr($thank_you_content_width) . '" />';
+}
+
 }

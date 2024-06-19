@@ -97,12 +97,21 @@ function enqueue_custom_return_request_styles() {
 add_action('wp_enqueue_scripts', 'enqueue_custom_return_request_styles');
 
 function enqueue_thank_you_styles() {
-    $thank_you_slug = get_option('thank_you_slug', 'thank-you'); // Default to 'thank-you' if not set
+    $thank_you_slug = get_option('thank_you_slug', 'return-form-submitted'); // Default to 'thank-you' if not set
     if (is_page($thank_you_slug)) {
         wp_enqueue_style('thank-you-page', plugin_dir_url(__FILE__) . 'assets/css/thank-you-page.css');
     }
 }
 add_action('wp_enqueue_scripts', 'enqueue_thank_you_styles');
+
+register_activation_hook(__FILE__, 'set_default_options');
+function set_default_options() {
+    if (get_option('thank_you_slug') === false) {
+        add_option('thank_you_slug', 'thank-you');
+    }
+}
+
+
 
 
 
